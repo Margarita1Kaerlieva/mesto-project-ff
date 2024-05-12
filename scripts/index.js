@@ -11,15 +11,15 @@ const handleDeleteCard = (card) => {
 
 // @todo: Функция создания карточки
 
-const createCard = (cards, onDelete) => {
+const createCard = (cardData, onDelete) => {
     const newCard = templateCard.cloneNode(true);
 
     const titleCard = newCard.querySelector('.card__title');
     const imgCard = newCard.querySelector('.card__image');
     const deleteButton = newCard.querySelector('.card__delete-button');
 
-    titleCard.textContent = cards.name;
-    imgCard.src = cards.link;
+    titleCard.textContent = cardData.name;
+    imgCard.src = cardData.link;
     imgCard.alt = 'Изображение пейзажа';
 
     deleteButton.addEventListener('click', () => {
@@ -29,8 +29,8 @@ const createCard = (cards, onDelete) => {
     return newCard;
 }
 
-initialCards.forEach((cards) => {
-    const newCard = createCard(cards, handleDeleteCard);
+initialCards.forEach((cardData) => {
+    const newCard = createCard(cardData, handleDeleteCard);
 
     placesList.append(newCard);
 })
