@@ -1,10 +1,10 @@
-export {createCard, onLike};
+export {createCard};
 
 // @todo: Функция создания и удаления карточки
 
 
 
-const createCard = (cardData, onDelete, onLike) => {
+const createCard = (cardData, onDelete) => {
     const templateCard = document.querySelector('#card-template').content.querySelector('.places__item');
     const newCard = templateCard.cloneNode(true);
 
@@ -12,7 +12,7 @@ const createCard = (cardData, onDelete, onLike) => {
     const imgCard = newCard.querySelector('.card__image');
     const deleteButton = newCard.querySelector('.card__delete-button');
 
-    const likeButton = newCard.querySelector('.card__like-button');
+    //const likeButton = newCard.querySelector('.card__like-button');
 
     titleCard.textContent = cardData.name;
     imgCard.src = cardData.link;
@@ -29,9 +29,9 @@ const createCard = (cardData, onDelete, onLike) => {
     return newCard;
 };
 
-function onLike(likeButton) {
-   likeButton.classList.toggle('card__like-button_active');
-};
+//function onLike(likeButton) {
+ //  likeButton.classList.toggle('card__like-button_active');
+//};
 
 
 
