@@ -1,6 +1,6 @@
 import '../pages/index.css';
 import {initialCards} from './cards.js';
-import {createCard, onLike, openCard} from './card.js';
+import {createCard, onLike, openCard, handleDeleteCard} from './card.js';
 import {openModal, closeModal} from './modal.js';
 
 const placesList = document.querySelector('.places__list');
@@ -9,65 +9,34 @@ const profileEditButton = document.querySelector('.profile__edit-button'); // К
 const popupTypeEdit = document.querySelector('.popup_type_edit'); // Окно редактирования
 const profileAddButton = document.querySelector('.profile__add-button'); // +
 const popupTypeNewCard = document.querySelector('.popup_type_new-card'); // Новая карточка
-
-const poputInpputTypeCardName = document.querySelector('.popup__input_type_card-name');
-const poputInpputTypeUrl = document.querySelector('.popup__input_type_url');
-
-const popupCaption = document.querySelector('.popup__caption');
 const popupTypeImage = document.querySelector('.popup_type_image');
-const popupImage = document.querySelector('.popup__image');
 
 const formElement = document.querySelector('.popup__form');
-
-const firstnameValue = document.getElementById('popup-firstname'); // id
-const professionValue = document.getElementById('popup-professional'); // id
+const formNewElement = document.querySelector('.popup__form__new');
 
 const nameInput = document.querySelector('.popup__input_type_name');
 const jobInput = document.querySelector('.popup__input_type_description');
 const fio = document.querySelector('.profile__title');
 const profession = document.querySelector('.profile__description');
-
-const popupContent = document.querySelector('.popup__content');
-const content = document.querySelector('.content');
-const popup = document.querySelector('.popup')
 const popupClose = document.querySelector('.popup__close');
 
-function handleDeleteCard(card) {
-    card.remove();
-};
+const popupCloseAll = document.querySelectorAll('.popup__close');
 
-// Вывести карточки на страницу
-
-initialCards.forEach((cardData) => {
-    const newCard = createCard(cardData, handleDeleteCard, onLike, openCard);
-    placesList.append(newCard);
-});
-
-function handleFormSubmit(evt) {
+const handleFormSubmit = (evt) => {
     evt.preventDefault();
     const inputName = nameInput.value
     const inputJob = jobInput.value
     fio.textContent = inputName;
     profession.textContent = inputJob;
-    openModal(popupTypeEdit);
+    closeModalModal(popupTypeEdit);
 };
 
-// Окно редактирования
+// Вывести карточки на страницу
 
-profileEditButton.addEventListener('click', () => {
-    openModal(popupTypeEdit);
+initialCards.forEach((cardData) => {
+    const newCard = createCard(cardData, handleDeleteCard, openCard, onLike);
+    placesList.append(newCard);
 });
-
-popupClose.addEventListener('click', () => {
-    closeModal(popupTypeEdit);
-});
-
-function formEdit() {
-    const fio = document.querySelector('.profile__title').textContent;
-    const profession = document.querySelector('.profile__description').textContent;
-    nameInput.value = fio;
-    jobInput.value = profession;
-};
 
 // +
 
@@ -75,9 +44,41 @@ profileAddButton.addEventListener('click', () => {
     openModal(popupTypeNewCard);
 });
 
-popupClose.addEventListener('click', () => {
-    closeModal(popupTypeNewCard);
+// Окно редактирования
+
+profileEditButton.addEventListener('click', () => {
+    openModal(popupTypeEdit);
 });
 
+popupCloseAll.forEach(element => {
+    element.addEventListener('click', () => {
+        closeModal(popupTypeEdit);
+        closeModal(popupTypeNewCard);
+        closeModal(popupTypeImage);
+    });
+});
+
+const formEdit = () => {
+    const fio = document.querySelector('.profile__title').textContent;
+    const profession = document.querySelector('.profile__description').textContent;
+    nameInput.value = fio;
+    jobInput.value = profession;
+};
+
+// Новая карточка
+
+const handleFormNewSubmit = (evt) => {
+    evt.preventDefault();
+    const placeName = evt.target.querySelector('#popup-new-place-name');
+    const link = evt.target.querySelector('#popup-new-link');
+
+    const newCard = createCard({ name: placeName.value, link: link.value }, handleDeleteCard, openCard, onLike)
+
+    placesList.prepend(newCard)
+
+    closeModal(popupTypeNewCard);
+};
+
 formElement.addEventListener('submit', handleFormSubmit);
+formNewElement.addEventListener('submit', handleFormNewSubmit);
 profileEditButton.addEventListener('click', formEdit);
