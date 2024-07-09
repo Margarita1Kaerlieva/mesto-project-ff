@@ -27,19 +27,9 @@ const link = document.querySelector('#popup-new-link');
 const openCard = ({ name, link }) => {
     imgCard.src = link;
     imgCard.alt = name;
-
     popupCaption.textContent = name;
-
     openModal(popupTypeImage);
 };
-
-
-//const openCard = (cardLink, cardName, cardTitle) => {
-   // popupTypeImage.querySelector('.popup__image').src = cardLink;
-  //  popupTypeImage.querySelector('.popup__image').alt = cardName;
-  //  popupTypeImage.querySelector('.popup__caption').textContent = cardTitle;
-  //  openModal(popupTypeImage);
-//};
 
 // Вывести карточки на страницу
 
@@ -77,7 +67,6 @@ const handleProfileFormSubmit = (evt) => {
 
 closeButtons.forEach((button) => {
     const popup = button.closest('.popup');
-
     button.addEventListener('click', () => closeModal(popup));
 });
 
@@ -85,14 +74,10 @@ closeButtons.forEach((button) => {
 
 const handleFormNewSubmit = (evt) => {
     evt.preventDefault();
-
-    const newCard = createCard({ cardData: { name: placeName.value, link: link.value }, onDelete: handleDeleteCard, onLike, openCard })
-
+    const newCard = createCard({ cardData: { name: placeName.value, link: link.value }, onDelete: handleDeleteCard, onLike, openCard });
     placesList.prepend(newCard)
-
     placeName.value = ""
     link.value = ""
-
     closeModal(popupTypeNewCard);
     evt.target.reset();
 };

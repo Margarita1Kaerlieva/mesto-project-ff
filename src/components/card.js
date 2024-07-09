@@ -1,5 +1,3 @@
-
-
 // @todo: Функция создания и удаления карточки
 
 const createCard = ({ cardData, onDelete, onLike, openCard }) => {
