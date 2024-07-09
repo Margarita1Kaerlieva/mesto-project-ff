@@ -1,7 +1,10 @@
 const openModal = (popup) => {
-  popup.classList.add('popup_is-opened');
+  popup.classList.add("popup_is-animated");
+  setTimeout(() => {
+    popup.classList.add('popup_is-opened');
   document.addEventListener('keydown', closeEsc);
   popup.addEventListener('click', closeOverlay);
+  }, 1);
 };
 
 const closeModal = (popup) => {
@@ -13,12 +16,11 @@ const closeModal = (popup) => {
  // Закрытие окна на кнопку Esc
 
 const closeEsc = (evt) => {
-    const openPopup = document.querySelector('.popup_is-opened');
-    if (evt.key === 'Escape') {
-      closeModal(openPopup);
+  if (evt.key === 'Escape') {
+    const openPopups = document.querySelector('.popup_is-opened');
+    closeModal(openPopups);
   };
 };
-
 // 
 
 const closeOverlay = (evt) => {
