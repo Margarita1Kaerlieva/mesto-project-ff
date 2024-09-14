@@ -1,15 +1,30 @@
 // @todo: Функция создания и удаления карточки
+import { deleteCards, likeCards, deleteLike } from './api.js'
 
-const createCard = ({ cardData, onDelete, onLike, openCard }) => {
+const createCard = ({ cardData, userId, onDelete, onLike, openCard }) => {
     const templateCard = document.querySelector('#card-template').content.querySelector('.places__item');
     const newCard = templateCard.cloneNode(true);
-
     const titleCard = newCard.querySelector('.card__title');
     const imgCard = newCard.querySelector('.card__image');
     const deleteButton = newCard.querySelector('.card__delete-button');
     const likeButton = newCard.querySelector('.card__like-button');
+    const numberLikes = newCard.querySelector('.number_likes');
+    
+    const { name: cardName, link: cardLink, name: cardTitle, owner, likes } = cardData;
 
-    const { name: cardName, link: cardLink, name: cardTitle } = cardData;
+    const isLiked = likes.some(({ _id }) => _id === userId)
+
+    if (isLiked) {
+        likeButton.classList.toggle('card__like-button_is-active');
+    }
+
+    if (owner._id !== userId) {
+        deleteButton.remove()
+    }
+
+    if (likes.length > 0) {
+        numberLikes.textContent = likes.length
+    }
 
     imgCard.src = cardLink;
     imgCard.alt = cardName;
@@ -18,15 +33,15 @@ const createCard = ({ cardData, onDelete, onLike, openCard }) => {
     //Удаление карточки
 
     deleteButton.addEventListener('click', () => {
-        onDelete(newCard);
+        onDelete(cardData._id, newCard);
     });
 
     //Лайк карточки;
 
     likeButton.addEventListener('click', () => {
-        onLike(likeButton);
+        onLike(cardData._id, isLiked)
     });
-    
+
     // Открытие карточки
 
    imgCard.addEventListener('click', () => {
@@ -36,12 +51,10 @@ const createCard = ({ cardData, onDelete, onLike, openCard }) => {
     return newCard;
 };
 
-const onLike = (likeButton) => {
-    likeButton.classList.toggle('card__like-button_is-active');
+const handleDeleteCard = (cardData, cardTemplate) => {
+    deleteCards(cardData._id).then(() => {
+        cardTemplate.remove();
+    })    
 };
 
-const handleDeleteCard = (card) => {
-    card.remove();
-};
-
-export {createCard, onLike, handleDeleteCard};
+export {createCard, handleDeleteCard};
