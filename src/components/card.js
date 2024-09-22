@@ -18,7 +18,11 @@ const createCard = ({ cardData, userId, onDelete, onLike, openCard }) => {
         likeButton.classList.toggle('card__like-button_is-active');
     }
 
-    if (owner._id !== userId) {
+    if (owner._id == userId) {
+        deleteButton.addEventListener('click', () => {
+            onDelete(cardData._id, newCard); 
+        });
+    } else {
         deleteButton.remove()
     }
 
@@ -29,12 +33,6 @@ const createCard = ({ cardData, userId, onDelete, onLike, openCard }) => {
     imgCard.src = cardLink;
     imgCard.alt = cardName;
     titleCard.textContent = cardTitle;
-
-    //Удаление карточки
-
-    deleteButton.addEventListener('click', () => {
-        onDelete(cardData._id, newCard);
-    });
 
     //Лайк карточки;
 
@@ -51,10 +49,10 @@ const createCard = ({ cardData, userId, onDelete, onLike, openCard }) => {
     return newCard;
 };
 
-const handleDeleteCard = (cardData, cardTemplate) => {
-    deleteCards(cardData._id).then(() => {
+const handleDeleteCard = (cardDataId, cardTemplate) => {
+    deleteCards(cardDataId).then(() => {
         cardTemplate.remove();
-    })    
+    });
 };
 
 export {createCard, handleDeleteCard};

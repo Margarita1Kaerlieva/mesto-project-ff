@@ -1,6 +1,8 @@
 import '../pages/index.css';
 // import {initialCards} from './cards.js';
-import {createCard, handleDeleteCard} from './card.js';
+import {createCard,
+     handleDeleteCard
+    } from './card.js';
 import {openModal, closeModal} from './modal.js';
 import {enableValidation, clearValidation, config} from './validation.js'
 import {placesList, profileEditButton, popupTypeEdit, profileAddButton, popupTypeNewCard,
@@ -46,7 +48,6 @@ const rerenderCards = () => {
         placesList.append(newCard);
     })
 }
-
 
 const init = () => {
     Promise.all([getInfoUser(), getInitialCards()]).then(([user, initialCards]) => {
@@ -102,10 +103,11 @@ const handleProfileFormSubmit = (evt) => {
     const inputName = nameInput.value
     const inputJob = jobInput.value
 
-    buttonPopup.textContent = 'Сохранение...';
+    const btn = evt.target.querySelector('.popup__button');
+    btn.textContent = 'Сохранение...'; 
 
     editInfoUser(inputName, inputJob).then(user => {
-        buttonPopup.textContent = 'Сохранить';
+        btn.textContent = 'Сохранить';
         fio.textContent = user.name;
         profession.textContent = user.about;
 
@@ -127,11 +129,14 @@ const handleFormNewSubmit = (evt) => {
     const name = placeName.value
     const link = urlInput.value
 
-    buttonPopup.textContent = 'Сохранение...';
+    const btn = evt.target.querySelector('.popup__button');
+    btn.textContent = 'Сохранение...'; 
+
+    console.log(buttonPopup)
 
     addNewCards(name, link).then((cardData) => {
         const newCard = createCard({ cardData, userId, onDelete: handleDeleteCard, onLike, openCard });
-        
+        btn.textContent = 'Сохранить';
         placesList.prepend(newCard)
         placeName.value = ""
         urlInput.value = ""
@@ -146,10 +151,12 @@ const profileFormAvatarSubmit = (evt) => {
 
     const url = avatarUrlInput.value;
 
-    buttonPopup.textContent = 'Сохранение...';
+    const btn = evt.target.querySelector('.popup__button');
+    btn.textContent = 'Сохранение...'; 
+
     addAvatar(url).then(res => {
         profileImage.style.backgroundImage = `url('${res.avatar}')`;
-        buttonPopup.textContent = 'Сохранить';
+        btn.textContent = 'Сохранить';
         closeModal(popupTypeAvatar);
         evt.target.reset();
         clearValidation(popupTypeAvatar, config);
