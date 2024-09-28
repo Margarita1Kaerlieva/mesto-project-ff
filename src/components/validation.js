@@ -1,11 +1,4 @@
-const config = ({
-  formSelector: '.popup__form',
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__error_visible'
-}); 
+import {config} from './config';
 
 // показывает элемент ошибки
 
@@ -29,7 +22,7 @@ const hideInputError = (formPopup, inputPopup, config) => {
 
 const isValid = (formPopup, inputPopup, config) => {
   if (inputPopup.validity.patternMismatch) {
-    inputPopup.setCustomValidity("Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы");
+    inputPopup.setCustomValidity(inputPopup.dataset.errorMessage);
   } else {
     inputPopup.setCustomValidity("");
   };

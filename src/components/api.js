@@ -73,7 +73,7 @@ export const deleteCards = (cardId) => {
 
 // Постановка лайка
 
-export const likeCards = (cardId) => {
+export const likeCard = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: 'PUT',
     headers: config.headers

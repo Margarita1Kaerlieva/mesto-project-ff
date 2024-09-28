@@ -8,14 +8,26 @@ import {enableValidation, clearValidation, config} from './validation.js'
 import {placesList, profileEditButton, popupTypeEdit, profileAddButton, popupTypeNewCard,
 popupTypeImage, imgCard, profileForm, formNewElement, fio, profession, nameInput, jobInput, 
 closeButtons, popupCaption, placeName, urlInput, profileImage, buttonPopup, popupTypeAvatar, avatarUrlInput, profileFormAvatar} from './constans.js'
-import {getInfoUser, getInitialCards, editInfoUser, addNewCards, likeCards, deleteLike, addAvatar} from './api.js';
+import {getInfoUser, getInitialCards, editInfoUser, addNewCards, likeCard, deleteLike, addAvatar} from './api.js';
 
 let userId = "";
 
 // данные о карточках
 let cards = []; 
 
-const onLike = (_id, isLiked) => {
+const rerenderLikeCount = (cardElement, likes) => {
+    const likeCounter = cardElement.querySelector('.number_likes');
+    likeCounter.textContent = likes.length;
+    const likeBtn = cardElement.querySelector('.card__like-button');
+
+    if (likeBtn.classList.contains('card__like-button_is-active')) {
+        likeBtn.classList.remove('card__like-button_is-active');
+    } else {
+        likeBtn.classList.add('card__like-button_is-active');
+    }
+}
+
+const onLike = (_id, isLiked, cardElement) => {
     if (isLiked) {
         return deleteLike(_id).then(res => {
             cards.forEach(card => {
@@ -23,19 +35,17 @@ const onLike = (_id, isLiked) => {
                     card.likes = res.likes;
                 }
             })
-            rerenderCards();
+            rerenderLikeCount(cardElement, res.likes); 
         })
     } else {
-        return likeCards(_id).then(res => {
+        return likeCard(_id).then(res => {
             console.log(_id, res);
             cards.forEach(card => {
                 if (card._id === _id) {
                     card.likes = res.likes;
                 }
             })
-
-            console.log(cards.find(card => card._id === _id));
-            rerenderCards();
+            rerenderLikeCount(cardElement, res.likes); 
         })
     }
 }
@@ -107,13 +117,15 @@ const handleProfileFormSubmit = (evt) => {
     btn.textContent = 'Сохранение...'; 
 
     editInfoUser(inputName, inputJob).then(user => {
-        btn.textContent = 'Сохранить';
         fio.textContent = user.name;
         profession.textContent = user.about;
 
         closeModal(popupTypeEdit);
         clearValidation(popupTypeEdit, config);
     })
+    .finally(() => {
+        btn.textContent = 'Сохранить';
+    });
 };
 
 closeButtons.forEach((button) => {
@@ -138,12 +150,13 @@ const handleFormNewSubmit = (evt) => {
         const newCard = createCard({ cardData, userId, onDelete: handleDeleteCard, onLike, openCard });
         btn.textContent = 'Сохранить';
         placesList.prepend(newCard)
-        placeName.value = ""
-        urlInput.value = ""
         closeModal(popupTypeNewCard);
         evt.target.reset();
         clearValidation(popupTypeNewCard, config);
-    });  
+    })
+    .finally(() => {
+        btn.textContent = 'Сохранить';
+    });
 };
 
 const profileFormAvatarSubmit = (evt) => {
@@ -156,10 +169,12 @@ const profileFormAvatarSubmit = (evt) => {
 
     addAvatar(url).then(res => {
         profileImage.style.backgroundImage = `url('${res.avatar}')`;
-        btn.textContent = 'Сохранить';
         closeModal(popupTypeAvatar);
         evt.target.reset();
         clearValidation(popupTypeAvatar, config);
+    })
+    .finally(() => {
+        btn.textContent = 'Сохранить';
     });
 };
 

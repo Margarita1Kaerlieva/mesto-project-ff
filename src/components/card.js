@@ -37,7 +37,7 @@ const createCard = ({ cardData, userId, onDelete, onLike, openCard }) => {
     //Лайк карточки;
 
     likeButton.addEventListener('click', () => {
-        onLike(cardData._id, isLiked)
+        onLike(cardData._id, isLiked, newCard)
     });
 
     // Открытие карточки
