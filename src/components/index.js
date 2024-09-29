@@ -1,10 +1,8 @@
 import '../pages/index.css';
-// import {initialCards} from './cards.js';
-import {createCard,
-     handleDeleteCard
-    } from './card.js';
+import {createCard, handleDeleteCard} from './card.js';
 import {openModal, closeModal} from './modal.js';
-import {enableValidation, clearValidation, config} from './validation.js'
+import {enableValidation, clearValidation} from './validation.js';
+import {config} from './config.js';
 import {placesList, profileEditButton, popupTypeEdit, profileAddButton, popupTypeNewCard,
 popupTypeImage, imgCard, profileForm, formNewElement, fio, profession, nameInput, jobInput, 
 closeButtons, popupCaption, placeName, urlInput, profileImage, buttonPopup, popupTypeAvatar, avatarUrlInput, profileFormAvatar} from './constans.js'
@@ -25,17 +23,17 @@ const rerenderLikeCount = (cardElement, likes) => {
     } else {
         likeBtn.classList.add('card__like-button_is-active');
     }
-}
+};
 
 const onLike = (_id, isLiked, cardElement) => {
     if (isLiked) {
-        return deleteLike(_id).then(res => {
-            cards.forEach(card => {
-                if (card._id === _id) {
-                    card.likes = res.likes;
-                }
-            })
-            rerenderLikeCount(cardElement, res.likes); 
+        const likeMethod = isLiked ? deleteLike : likeCard;
+        likeMethod(_id).then(res => { 
+                    const cartToUpdate = cards.find(card => card._id === _id);
+                   if (cartToUpdate) {
+                      cartToUpdate.likes = res.likes;
+                    }
+                    rerenderLikeCount(cardElement, res.likes); 
         })
     } else {
         return likeCard(_id).then(res => {
@@ -48,7 +46,7 @@ const onLike = (_id, isLiked, cardElement) => {
             rerenderLikeCount(cardElement, res.likes); 
         })
     }
-}
+};
 
 const rerenderCards = () => {
     placesList.innerHTML = "";

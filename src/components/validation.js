@@ -1,5 +1,3 @@
-import {config} from './config';
-
 // показывает элемент ошибки
 
 const showInputError = (formPopup, inputPopup, errorMessage, config) => {
@@ -64,14 +62,14 @@ const setEventListeners = (formPopup, config) => {
   });
 };
 
-const enableValidation = (config) => {
+export const enableValidation = (config) => {
   const formList = Array.from(document.querySelectorAll(config.formSelector));
   formList.forEach((formPopup) => {
     setEventListeners(formPopup, config);
   });
 };
 
-const clearValidation = (formPopup, config) => {
+export const clearValidation = (formPopup, config) => {
   const inputList = Array.from(formPopup.querySelectorAll(config.inputSelector));
   const buttonElement = formPopup.querySelector(config.submitButtonSelector);
   inputList.forEach((inputPopup) => {
@@ -79,5 +77,3 @@ const clearValidation = (formPopup, config) => {
   });
   toggleButtonState(inputList, buttonElement, config);
 };
-
-export {enableValidation, clearValidation, config};
